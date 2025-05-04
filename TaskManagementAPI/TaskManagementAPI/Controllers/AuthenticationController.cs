@@ -60,7 +60,4 @@ public class AuthenticationController : ControllerBase
             throw new BadHttpRequestException("the Post Call to api/SignOut Failled");
         return Ok(flag);
     }
-    
-
-
 }

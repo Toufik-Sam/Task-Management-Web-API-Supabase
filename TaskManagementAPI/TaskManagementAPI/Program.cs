@@ -11,6 +11,7 @@ builder.AddValidationServices();
 
 
 var app = builder.Build();
+//Insert Error Handling Middleware
 app.UseMiddleware<ErrorHandlingMiddleware>();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
