@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using TaskManagementAPI.ApplicationDTOs.AuthControllerDTOs;
 using TaskManagementAPI.Services;
+using TaskManagementBusinessLayer.Users;
+using TaskManagementDataAccessLayer.Exceptions;
 
 namespace TaskManagementAPI.Controllers;
 
@@ -9,55 +11,92 @@ namespace TaskManagementAPI.Controllers;
 [ApiController]
 public class AuthenticationController : ControllerBase
 {
+    private readonly IUser _user;
     private readonly IConfiguration _config;
     private readonly ILogger<AuthenticationController> _logger;
     private readonly IAuthService _supabaseAuth;
+    private readonly Supabase.Client _client;
 
-    public AuthenticationController(IConfiguration config,ILogger<AuthenticationController>logger,IAuthService supabaseAuth)
+    public AuthenticationController(Supabase.Client client,IUser user, IConfiguration config,IAuthService supabaseAuth,
+        ILogger<AuthenticationController>logger)
     {
+        this._user = user;
         this._config = config;
-        this._logger = logger;
         this._supabaseAuth = supabaseAuth;
+        this._logger = logger;
+        this._client = client;
     }
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [AllowAnonymous]
     [HttpPost("SignUp")]
     public async Task<IActionResult> SignUp([FromBody] SignUpDataDTO Request)
     {
-        var metadata = new Dictionary<string, object>
+        _logger.LogInformation("POST api/SignUp");
+
+        var UserMetaData = new Dictionary<string, object>
             {
                  { "first_name", Request.FirstName },
                  { "last_name", Request.LastName },
                  { "phone", Request.Phone }
             };
-        var user = await _supabaseAuth.SignUpAsync(Request.Email, Request.Password, metadata);
+        var user = await _supabaseAuth.SignUpAsync(Request.Email, Request.Password, UserMetaData);
         if (user == null)
-            throw new BadHttpRequestException("The Post Call To api/SignUp Failled");
+            throw new BadRequestException("The Post Call To api/SignUp Failled");
 
         return Ok(user);
     }
+
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [AllowAnonymous]
     [HttpPost("SignIn")]
     public async Task<IActionResult> SignIn([FromBody] SignInDataDTO Request)
     {
+        _logger.LogInformation("POST api/SignIn");
         var Res = await _supabaseAuth.SignInAsync(Request.Email, Request.Password);
         if (Res == null)
-            throw new BadHttpRequestException("The Post Call To api/SignIn Failled");
+            throw new BadRequestException("The POST call to api/SignIn failled!");
         return Ok(Res);
     }
-    
+
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [HttpPost("SignOut")]
     public async Task<IActionResult> SignOutUser()
     {
-        bool flag=await _supabaseAuth.Signout();
-        if (!flag)
-            throw new BadHttpRequestException("the Post Call to api/SignOut Failled");
-        return Ok(flag);
+        _logger.LogInformation("POST api/SignOut");
+        bool IsLoggedOut =await _supabaseAuth.Signout();
+        if (!IsLoggedOut)
+            throw new BadRequestException("the Post Call to api/SignOut Failled");
+        return Ok("You have Been Logged Out Successfully !");
+    }
+
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [HttpPost("RefreshToken")]
+    public async Task<IActionResult> RefreshToken([FromBody] string refreshToken)
+    {
+        _logger.LogInformation("POST api/RefreshToken");
+        string accessToken = "";
+        var authHeader = HttpContext.Request.Headers["Authorization"].ToString();
+        if (!string.IsNullOrWhiteSpace(authHeader) && authHeader.StartsWith("Bearer "))
+            accessToken= authHeader.Substring("Bearer ".Length).Trim();
+        if (await _client.Auth.SetSession(accessToken, refreshToken) != null && await _client.InitializeAsync() != null)
+            await _client.Auth.RefreshToken();
+        throw new BadRequestException("the POST call to api/RefreshToken failled!");
+
     }
 }

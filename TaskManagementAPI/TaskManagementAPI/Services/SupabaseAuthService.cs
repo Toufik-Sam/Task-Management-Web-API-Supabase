@@ -5,14 +5,26 @@ namespace TaskManagementAPI.Services
     public class SupabaseAuthService : IAuthService
     {
         private readonly IConfiguration _config;
-        private readonly Client _supabase;
-        public SupabaseAuthService(IConfiguration config)
+        private readonly Supabase.Client _supabase;
+        public SupabaseAuthService(Supabase.Client supabase,IConfiguration config)
         {
             this._config = config;
-            this._supabase= new Client(_config["Supabase:URL"]!, _config["Supabase:AnonKey"],
-           new SupabaseOptions { AutoConnectRealtime = true });
+            this._supabase = supabase;
         }
 
+        public async Task<object> RefreshToken(string accessToken,string refreshToken)
+        {
+            if (await _supabase.Auth.SetSession(accessToken, refreshToken) != null && await _supabase.InitializeAsync() != null)
+            {
+                await _supabase.Auth.RefreshToken();
+                return new
+                {
+                    newAccessToken = _supabase.Auth.CurrentSession!.AccessToken,
+                    newRefreshToken = _supabase.Auth.CurrentSession.RefreshToken
+                };
+            }
+            return new { };
+        }
 
         public async Task<AuthSignInDTO>SignInAsync(string Email, string Password)
         {
@@ -45,6 +57,6 @@ namespace TaskManagementAPI.Services
             return new AuthSignUpDTO(result.User.Id,result.User.Email,result.User.Aud,result.User.CreatedAt, 
                 result.User.ConfirmationSentAt, result.User.UserMetadata);
         }
-        
     }
+
 }

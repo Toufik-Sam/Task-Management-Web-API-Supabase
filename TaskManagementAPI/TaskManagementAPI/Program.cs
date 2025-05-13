@@ -8,7 +8,7 @@ builder.AddStandardServices();
 builder.AddAuthServices();
 builder.AddCustomServices();
 builder.AddValidationServices();
-
+//builder.Services.AddHttpClient();
 
 var app = builder.Build();
 //Insert Error Handling Middleware
@@ -21,6 +21,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

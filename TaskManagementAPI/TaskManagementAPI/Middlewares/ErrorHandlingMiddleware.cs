@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
-using TaskManagementAPI.Middlewares.CustomExceptions;
+using TaskManagementDataAccessLayer.CustomSupabaseClient;
+using TaskManagementDataAccessLayer.Exceptions;
 
 namespace TaskManagementAPI.Middlewares;
 
@@ -16,10 +17,13 @@ public class ErrorHandlingMiddleware
         this._logger = logger;
         this._env = env;
     }
-    public async Task Invoke(HttpContext context)
+    public async Task Invoke(HttpContext context, ITokenAccessor tokenAccessor)
     {
         try
         {
+            var authHeader = context.Request.Headers["Authorization"].ToString();
+            if(!string.IsNullOrWhiteSpace(authHeader) && authHeader.StartsWith("Bearer "))
+                tokenAccessor.Token = authHeader.Substring("Bearer ".Length).Trim();
             await _next(context);
         }
         catch(Exception ex)
@@ -48,7 +52,9 @@ public class ErrorHandlingMiddleware
         return ex switch
         {
             NotFoundException => StatusCodes.Status404NotFound,
-            BadHttpRequestException => StatusCodes.Status400BadRequest,
+            BadRequestException => StatusCodes.Status400BadRequest,
+            BadHttpRequestException=>StatusCodes.Status400BadRequest,
+            ForbiddenRequestException=>StatusCodes.Status403Forbidden,
             UnauthorizedAccessException => StatusCodes.Status401Unauthorized,
             _ => StatusCodes.Status500InternalServerError
         };
@@ -58,6 +64,7 @@ public class ErrorHandlingMiddleware
     {
         400 => "Bad Request",
         401 => "Unauthorized",
+        403=>  "Forbidden",
         404 => "Not Found",
         500 => "Internal Server Error",
         _ => "An error occurred"

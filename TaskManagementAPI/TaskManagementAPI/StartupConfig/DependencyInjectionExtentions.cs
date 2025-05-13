@@ -1,11 +1,15 @@
-﻿using Microsoft.OpenApi.Models;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using TaskManagementAPI.Services;
 using FluentValidation;
 using TaskManagementAPI.InputValidation.AuthControllerValidation;
 using FluentValidation.AspNetCore;
+using Microsoft.OpenApi.Models;
+using Supabase;
+using TaskManagementDataAccessLayer.UserData;
+using TaskManagementBusinessLayer.Users;
+using TaskManagementDataAccessLayer.CustomSupabaseClient;
 
 namespace TaskManagementAPI.StartupConfig;
 
@@ -15,11 +19,9 @@ public static class DependencyInjectionExtentions
     {
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
-        //builder.AddSwagerServices();
-        builder.Services.AddSwaggerGen();
+        builder.AddSwaggerServices();
     }
-    /*
-     * public static void AddSwagerServices(this WebApplicationBuilder builder)
+    public static void AddSwaggerServices(this WebApplicationBuilder builder)
     {
         var securityScheme = new OpenApiSecurityScheme()
         {
@@ -50,7 +52,6 @@ public static class DependencyInjectionExtentions
             opts.AddSecurityRequirement(securityRequiremet);
         });
     }
-     */
     public static void AddValidationServices(this WebApplicationBuilder builder)
     {
         builder.Services.AddFluentValidationAutoValidation();
@@ -59,7 +60,20 @@ public static class DependencyInjectionExtentions
     }
     public static void AddCustomServices(this WebApplicationBuilder builder)
     {
+        builder.Services.AddScoped<ISupabaseClient, SupabaseClient>();
+        builder.Services.AddScoped<ITokenAccessor, TokenAccessor>();
+        builder.Services.AddHttpClient("SupabaseClient", Client =>
+        {
+            Client.BaseAddress = new Uri(builder.Configuration["Supabase:URL"]!);
+        });
+        builder.Services.AddScoped<Supabase.Client>(_ => new Supabase.Client(
+            builder.Configuration["Supabase:URL"]!,
+            builder.Configuration["Supabase:AnonKey"],
+            new SupabaseOptions{AutoConnectRealtime = true}
+            ));
         builder.Services.AddScoped<IAuthService, SupabaseAuthService>();
+        builder.Services.AddScoped<IUserData, UserData>();
+        builder.Services.AddScoped<IUser, User>();
     }
     public static void AddAuthServices(this WebApplicationBuilder builder)
     {
@@ -69,9 +83,9 @@ public static class DependencyInjectionExtentions
 
         builder.Services.AddAuthentication(defaultScheme: "Bearer").AddJwtBearer(opts => opts.TokenValidationParameters = new()
         {
-            ValidateIssuerSigningKey = true,
             ValidateIssuer = true,
             ValidateAudience = true,
+            ValidateIssuerSigningKey = true,
             ValidIssuer = builder.Configuration.GetValue<string>(key: "Authentication:Issuer"),
             ValidAudience = builder.Configuration.GetValue<string>(key: "Authentication:Audience"),
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.
