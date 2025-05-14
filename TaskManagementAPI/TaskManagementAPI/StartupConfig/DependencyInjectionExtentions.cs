@@ -10,6 +10,8 @@ using Supabase;
 using TaskManagementDataAccessLayer.UserData;
 using TaskManagementBusinessLayer.Users;
 using TaskManagementDataAccessLayer.CustomSupabaseClient;
+using TaskManagementDataAccessLayer.ProjectData;
+using TaskManagementBusinessLayer.Projects;
 
 namespace TaskManagementAPI.StartupConfig;
 
@@ -74,6 +76,8 @@ public static class DependencyInjectionExtentions
         builder.Services.AddScoped<IAuthService, SupabaseAuthService>();
         builder.Services.AddScoped<IUserData, UserData>();
         builder.Services.AddScoped<IUser, User>();
+        builder.Services.AddScoped<IProjectData, ProjectData>();
+        builder.Services.AddScoped<IProject, Project>();
     }
     public static void AddAuthServices(this WebApplicationBuilder builder)
     {

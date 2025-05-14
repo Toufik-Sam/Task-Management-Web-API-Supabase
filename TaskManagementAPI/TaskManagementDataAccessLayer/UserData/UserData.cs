@@ -10,7 +10,15 @@ public  class UserData:IUserData
     {
         this._supabase = supabase;
     }
-    
+
+    public async Task<bool> AddNewProfile(UserDTO newUserProfile,string AccessToken)
+    {
+        return JsonSerializer.Deserialize<bool>(await _supabase.Rpc("sp_add_new_profile", 
+        new {p_first_name=newUserProfile.FirstName,
+             p_last_name=newUserProfile.LastName,
+             p_email=newUserProfile.Email},
+        AccessToken));
+    }
     public async Task<bool> DeactivateUserProfile()
     {
         return JsonSerializer.Deserialize<bool>(await _supabase.Rpc("sp_deactivate_user_profile", new {}));
@@ -19,9 +27,9 @@ public  class UserData:IUserData
     {
         return JsonSerializer.Deserialize<bool>(await _supabase.Rpc("sp_delete_user_profile", new {}));
     }
-    public async Task<bool> DoesUserProfileExist()
+    public async Task<bool> DoesUserProfileExist(string AccessToken)
     {
-        return JsonSerializer.Deserialize<bool>(await _supabase.Rpc("sp_does_user_profile_exist", new {}));
+        return JsonSerializer.Deserialize<bool>(await _supabase.Rpc("sp_does_user_profile_exist", new {},AccessToken));
     }
     public async Task<UserDTO> GetMyProfileInfo(string Email)
     {

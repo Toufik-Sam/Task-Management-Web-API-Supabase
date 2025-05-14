@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using TaskManagementAPI.ApplicationDTOs.AuthControllerDTOs;
 using TaskManagementAPI.Services;
 using TaskManagementBusinessLayer.Users;
+using TaskManagementDataAccessLayer.CustomSupabaseClient;
 using TaskManagementDataAccessLayer.Exceptions;
+using TaskManagementDataAccessLayer.UserData;
 
 namespace TaskManagementAPI.Controllers;
 
@@ -12,16 +14,14 @@ namespace TaskManagementAPI.Controllers;
 public class AuthenticationController : ControllerBase
 {
     private readonly IUser _user;
-    private readonly IConfiguration _config;
     private readonly ILogger<AuthenticationController> _logger;
     private readonly IAuthService _supabaseAuth;
     private readonly Supabase.Client _client;
 
-    public AuthenticationController(Supabase.Client client,IUser user, IConfiguration config,IAuthService supabaseAuth,
+    public AuthenticationController(Supabase.Client client,IUser user,IAuthService supabaseAuth,
         ILogger<AuthenticationController>logger)
     {
         this._user = user;
-        this._config = config;
         this._supabaseAuth = supabaseAuth;
         this._logger = logger;
         this._client = client;
@@ -63,6 +63,14 @@ public class AuthenticationController : ControllerBase
         var Res = await _supabaseAuth.SignInAsync(Request.Email, Request.Password);
         if (Res == null)
             throw new BadRequestException("The POST call to api/SignIn failled!");
+
+        UserDTO newUserProfile = new UserDTO(-1, Guid.Parse(Res.User.Id), (string)Res.User.UserMetadata["first_name"], 
+            (string)Res.User.UserMetadata["last_name"], Res.User.Email, true);
+        if (!await _user.DoesUserProfileExist(Res.AccessToken))
+        {
+            if (!await _user.AddNewProfile(newUserProfile,Res.AccessToken))
+                throw new BadRequestException("The POST call api/SignIn failled!");
+        }
         return Ok(Res);
     }
 

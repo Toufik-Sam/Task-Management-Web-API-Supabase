@@ -10,6 +10,12 @@ public class User : IUser
     {
         this._userData = userData;
     }
+
+    public async Task<bool> AddNewProfile(UserDTO newUserProfile,string AccessToken)
+    {
+        return await _userData.AddNewProfile(newUserProfile,AccessToken);
+    }
+
     public async Task<bool> DeactivateUserProfile()
     {
         return await _userData.DeactivateUserProfile();
@@ -20,9 +26,9 @@ public class User : IUser
         return await _userData.DeleteUserAndProfile();
     }
 
-    public async Task<bool> DoesUserProfileExist()
+    public async Task<bool> DoesUserProfileExist(string AccessToken)
     {
-        return await _userData.DoesUserProfileExist();
+        return await _userData.DoesUserProfileExist(AccessToken);
     }
     public async Task<UserDTO> Find()
     {

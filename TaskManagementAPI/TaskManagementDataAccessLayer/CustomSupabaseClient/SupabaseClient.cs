@@ -20,12 +20,15 @@ public class SupabaseClient : ISupabaseClient
         this._config = config;
         this._tokenAccessor = tokenAccessor;
     }
-    public async Task<string> Rpc(string FunctionName, object parameters)
+    public async Task<string> Rpc(string FunctionName, object parameters,string OverrideToken="")
     {
         var client = _httpClient.CreateClient("SupabaseClient");
         // Set authentication headers for this request
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _tokenAccessor.Token);
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", 
+            (string.IsNullOrEmpty(OverrideToken)?_tokenAccessor.Token:OverrideToken));
+
         client.DefaultRequestHeaders.Remove("apikey");
+
         client.DefaultRequestHeaders.Add("apikey", _config["Supabase:AnonKey"]);
         var content = new StringContent(JsonSerializer.Serialize(parameters), Encoding.UTF8, "application/json");
 
