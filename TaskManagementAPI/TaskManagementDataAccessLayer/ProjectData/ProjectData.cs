@@ -1,5 +1,6 @@
 ﻿
 using System.Text.Json;
+using TaskManagementDataAccessLayer.BaseModels;
 using TaskManagementDataAccessLayer.CustomSupabaseClient;
 
 namespace TaskManagementDataAccessLayer.ProjectData;
@@ -12,17 +13,18 @@ public class ProjectData : IProjectData
     {
         this._supabase = supabase;
     }
-    public async Task<Guid> AddNewProject(ProjectDTO newProject)
+    public async Task<bool> AddNewProject(ProjectDTO newProject)
     {
-        Guid newProjectID = Guid.Empty;
-        newProjectID=JsonSerializer.Deserialize<Guid>(await _supabase.Rpc("sp_add_new_user_project", 
-           new {p_owner_id=newProject.OwnerID,
-               p_title=newProject.Title,
-               p_desc=newProject.Description,
-               p_status_id=newProject.Status,
-               p_priority_id=newProject.Priority,
-               p_created_at=newProject.CreatedAt}));
-        return newProjectID;
+        return JsonSerializer.Deserialize<bool>(await _supabase.Rpc("sp_add_new_user_project",
+           new
+           {
+               p_owner_id = newProject.OwnerID,
+               p_title = newProject.Title,
+               p_desc = newProject.Description,
+               p_status_id = (int)newProject.Status,
+               p_priority_id = (int)newProject.Priority,
+               p_created_at = newProject.CreatedAt
+           }));
     }
 
     public async Task<bool> DeleteProject(Guid ProjectID)
@@ -30,9 +32,9 @@ public class ProjectData : IProjectData
         return JsonSerializer.Deserialize<bool>(await _supabase.Rpc("sp_delete_user_project", new {p_project_id=ProjectID}));
     }
 
-    public async Task<IEnumerable<ProjectDTO>> GetAllMyProjects()
+    public async Task<IEnumerable<ProjectBaseModel>> GetAllMyProjects()
     {
-        return JsonSerializer.Deserialize<IEnumerable<ProjectDTO>>(await _supabase.Rpc("sp_get_all_user_projects", new {}))!;
+        return JsonSerializer.Deserialize<IEnumerable<ProjectBaseModel>>(await _supabase.Rpc("sp_get_all_user_projects", new {}))!;
     }
 
     public async Task<ProjectDTO> GetMyProjectInfoByID(Guid ProjectID)

@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TaskManagementBusinessLayer.Projects;
+using TaskManagementDataAccessLayer;
+using TaskManagementDataAccessLayer.BaseModels;
 using TaskManagementDataAccessLayer.Exceptions;
 using TaskManagementDataAccessLayer.ProjectData;
 
@@ -23,10 +25,14 @@ public class ProjectController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [HttpGet]
-    public IEnumerable<string> Get()
+    [HttpGet("GetAllUserProjects")]
+    public async Task<ActionResult<IEnumerable<ProjectDTO>>>GetAllUserProjects()
     {
-        return new string[] { "value1", "value2" };
+        _logger.LogInformation("GET API/GetAllUserProjects");
+        var userProjectsList = await _project.GetAllMyProjects();
+        if (userProjectsList != null)
+            return Ok(userProjectsList);
+        throw new BadRequestException("The GET call to api/GetAllUserProjects failled!");
     }
 
     // GET api/<ProjectController>/5
@@ -42,13 +48,15 @@ public class ProjectController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [HttpPost("AddNewUserProject")]
-    public async Task<ActionResult<ProjectDTO>> Post([FromBody]ProjectDTO project)
+    public async Task<ActionResult<ProjectDTO>> Post([FromBody] ProjectBaseModel project)
     {
         _logger.LogInformation("POST api/AddNewUserProject");
-        var newProject = await _project.AddNewProject(project);
-        if (newProject != null)
-            return Ok(newProject);
-        throw new BadRequestException("the POST call to api/AddNewUserProject failled!");
+        var newProjectDTO = new ProjectDTO(Guid.NewGuid(), project.OwnerID, project.Title, project.Description, 
+            (Statuses)project.StatusID, (Priorities)project.PriorityID, project.CreatedAt);
+        var AddedProject = await _project.AddNewProject(newProjectDTO);
+        if (AddedProject)
+            return Ok(newProjectDTO);
+        throw new BadRequestException("The POST call to api/AddNewUserProject failled!");
     }
 
     // PUT api/<ProjectController>/5

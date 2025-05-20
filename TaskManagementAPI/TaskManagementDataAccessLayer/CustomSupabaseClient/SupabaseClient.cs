@@ -23,7 +23,7 @@ public class SupabaseClient : ISupabaseClient
     public async Task<string> Rpc(string FunctionName, object parameters,string OverrideToken="")
     {
         var client = _httpClient.CreateClient("SupabaseClient");
-        // Set authentication headers for this request
+
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", 
             (string.IsNullOrEmpty(OverrideToken)?_tokenAccessor.Token:OverrideToken));
 

@@ -4,7 +4,7 @@ namespace TaskManagementBusinessLayer.Projects;
 
 public interface IProject
 {
-    Task<ProjectDTO> AddNewProject(ProjectDTO newProject);
+    Task<bool> AddNewProject(ProjectDTO newProject);
     Task<ProjectDTO> GetMyProjectInfoByID(Guid ProjectID);
     Task<IEnumerable<ProjectDTO>> GetAllMyProjects();
     Task<bool> UpdateProjectInfo(ProjectDTO updatedProject);

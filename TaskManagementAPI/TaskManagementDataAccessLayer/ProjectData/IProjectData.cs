@@ -1,10 +1,12 @@
-﻿namespace TaskManagementDataAccessLayer.ProjectData;
+﻿using TaskManagementDataAccessLayer.BaseModels;
+
+namespace TaskManagementDataAccessLayer.ProjectData;
 
 public  interface IProjectData
 {
-    Task<Guid> AddNewProject(ProjectDTO newProject);
+    Task<bool> AddNewProject(ProjectDTO newProject);
     Task<ProjectDTO>GetMyProjectInfoByID(Guid ProjectID);
-    Task<IEnumerable<ProjectDTO>> GetAllMyProjects();
+    Task<IEnumerable<ProjectBaseModel>> GetAllMyProjects();
     Task<bool> UpdateProjectInfo(ProjectDTO updatedProject);
     Task<bool> DeleteProject(Guid ProjectID);
 

@@ -1,4 +1,5 @@
-﻿using TaskManagementDataAccessLayer.ProjectData;
+﻿using TaskManagementDataAccessLayer;
+using TaskManagementDataAccessLayer.ProjectData;
 
 namespace TaskManagementBusinessLayer.Projects;
 
@@ -10,17 +11,9 @@ public class Project : IProject
     {
         this._projectData = projectData;
     }
-    public async Task<ProjectDTO> AddNewProject(ProjectDTO newProject)
+    public async Task<bool> AddNewProject(ProjectDTO newProject)
     {
-        Guid newProjectID = await _projectData.AddNewProject(newProject);
-        return (newProjectID != Guid.Empty) ?
-            new ProjectDTO(newProjectID,
-                           newProject.OwnerID,
-                           newProject.Title,
-                           newProject.Description,
-                           newProject.Status,
-                           newProject.Priority,
-                           newProject.CreatedAt) : null!;
+        return await _projectData.AddNewProject(newProject);
     }
 
     public Task<bool> DeleteProject(Guid ProjectID)
@@ -28,9 +21,18 @@ public class Project : IProject
         throw new NotImplementedException();
     }
 
-    public Task<IEnumerable<ProjectDTO>> GetAllMyProjects()
+    public async Task<IEnumerable<ProjectDTO>> GetAllMyProjects()
     {
-        throw new NotImplementedException();
+        List<ProjectDTO> projects = new List<ProjectDTO>();
+        var userProjects = await _projectData.GetAllMyProjects();
+        if (userProjects!=null)
+        {
+            foreach (var project in userProjects)
+                projects.Add(new ProjectDTO(project.ProjectID, project.OwnerID, project.Title, project.Description, (Statuses)project.StatusID,
+                    (Priorities)project.PriorityID, project.CreatedAt));
+            return projects;
+        }
+        return null!;
     }
 
     public Task<ProjectDTO> GetMyProjectInfoByID(Guid ProjectID)
