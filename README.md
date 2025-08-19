@@ -10,7 +10,7 @@ This project is a Task Management RESTful API designed and implemented using ASP
 - **Goal Management**: Define and manage project goals with comprehensive status and priority tracking, including start and end date monitoring for effective timeline management.
 - **Task Management**: Oversee goal-related tasks, including subtasks, with comprehensive management of statuses, priorities, timelines, and task category assignments for organized workflow.
 - **Performance Management**:  Monitor goal performance by tracking tasks, completed and overdue tasks, total overdue time, and overall project progress for effective performance analysis including daily Report simulation.
-- 
+  
 ## Technical Features
 - **Clean Architecture**:  The project is structured according to the principles of Clean Architecture, which promotes separation of concerns and a clear division of responsibilities.
 - **SOLID Design Principles**:The code adheres to SOLID principles (Single Responsibility, Open-Closed, Liskov Substitution, Interface Segregation, and Dependency Inversion), making it easier to maintain and extend.
