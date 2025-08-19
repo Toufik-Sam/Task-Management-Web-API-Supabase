@@ -25,7 +25,7 @@ This project is a Task Management RESTful API designed and implemented using ASP
 ## Technologies Used
 - **ASP.NET Core 8 Web API** for API development.
 - **Supabase** for Database Development (PostgreSQL) and Authentication
-- C# 12 and PL/pgSQL
+- **C# 12** and **PL/pgSQL**
 
 ## How It Works
 #### 1. **Sign Up**
