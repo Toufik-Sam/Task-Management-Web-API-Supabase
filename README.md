@@ -28,7 +28,7 @@ This project is a Task Management RESTful API designed and implemented using ASP
 - C# 12 and PL/pgSQL
 
 ## How It Works
-### 1. **Sign Up**
+#### 1. **Sign Up**
 - A new user can sign up using their email and password and firstname and lastname.
 - Upon registration, they will receive a confirmation email from **Supabase** to verify their account.
 
