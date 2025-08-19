@@ -51,7 +51,7 @@ This project is a Task Management RESTful API designed and implemented using ASP
   - Add themselves as a **project member**, or
   - Remain only as the **project owner**.
 - Similar to teams, only users with roles `enOwner` or `enTeamLead` within the project can invite other members.
-
+  
 #### 5. **Set Project Goals**
 - Once the project and its members are set up, users with roles `enOwner` or `enTeamLead` can begin creating **target goals** for the project.
 
