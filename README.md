@@ -1,2 +1,3 @@
 # Task-Management-Web-API
-A robust and scalable Task Management RESTful API designed to streamline project and task organization. This API enables users to create and manage projects, each containing tasks that can be further broken down into subtasks. It tracks task and project status, priority, and overall progress to provide comprehensive workflow visibility.
+This project is a Task Management RESTful API designed and implemented using ASP.NET Core Web API. It leverages Supabase as a backend-as-a-service (BaaS) platform, which provides reliable database hosting and authentication services.A robust and scalable Task Management RESTful API designed to streamline project and tasks organization. This API enables users to create and manage projects, each containing Goals and tasks that can be further broken down into subtasks. It tracks task and project status, priority, and overall progress to provide comprehensive workflow visibility.
+
