@@ -79,7 +79,7 @@ namespace TaskManagementAPI.Controllers
                     $"Goal with ID {task.parent_task_id}");
 
             var newTask = new TaskDTO(task.task_id, task.title, task.description, task.created_at, task.start_date, task.end_date
-                ,null,null,(Statuses)task.status_id, (Priorities)task.priority_id, task.goal_id, task.created_by_project_member_id, 
+                ,null,null,Statuses.enPending, (Priorities)task.priority_id, task.goal_id, task.created_by_project_member_id, 
                 task.assigned_to_project_member_id, (task.parent_task_id>0?task.parent_task_id:-1),task.task_category_id);
             var AddedTask = await _task.AddNewTask(newTask);
 

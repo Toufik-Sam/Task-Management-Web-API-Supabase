@@ -87,7 +87,7 @@ public class ProjectController : ControllerBase
         if (!_validateInput.ProjectDataValidator(project))
             throw new BadRequestException($"The Post call to api/AddNewUserProject failled due to Input Validation Error !");
         var newProjectDTO = new ProjectDTO(Guid.NewGuid(),project.owner_id, project.title, project.description, 
-            (Statuses)project.status_id, (Priorities)project.priority_id, project.created_at);
+            Statuses.enPending, (Priorities)project.priority_id, project.created_at);
         var AddedProject = await _project.AddNewProject(newProjectDTO);
         if (AddedProject)
             return Ok(newProjectDTO);

@@ -61,7 +61,7 @@ namespace TaskManagementAPI.Controllers
                    goal.planned_end_date,
                    null,
                    null,
-                   (Statuses)goal.status_id,
+                   Statuses.enPending,
                    (Priorities)goal.priority_id,
                    goal.created_by_project_member_id,
                    goal.created_at);
