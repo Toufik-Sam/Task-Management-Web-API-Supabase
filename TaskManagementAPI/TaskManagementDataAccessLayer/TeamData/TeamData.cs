@@ -33,6 +33,11 @@ public class TeamData : ITeamData
         return JsonSerializer.Deserialize<IEnumerable<TeamBaseModel>>(await _supabase.Rpc("sp_get_all_my_teams", new {}))!;
     }
 
+    public async Task<IEnumerable<TeamBaseModel>> GetTeamByID(int TeamID)
+    {
+        return JsonSerializer.Deserialize<IEnumerable<TeamBaseModel>>(await _supabase.Rpc("sp_get_team_by_id", new { p_team_id = TeamID }))!;
+    }
+
     public async Task<bool> UpdateTeamName(int TeamID,string Name)
     {
         return JsonSerializer.Deserialize<bool>(await _supabase.Rpc("sp_update_team_name", new { p_team_id=TeamID,p_new_name = Name }));

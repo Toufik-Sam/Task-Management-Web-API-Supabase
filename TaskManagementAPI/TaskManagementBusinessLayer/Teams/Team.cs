@@ -22,9 +22,15 @@ public class Team : ITeam
         return await _teamData.DeleteTeam(TeamID);
     }
 
-    public Task<IEnumerable<TeamBaseModel>> GetAllMyTeams()
+    public async Task<TeamDTO> Find(int TeamID)
     {
-        throw new NotImplementedException();
+        var team = await _teamData.GetTeamByID(TeamID);
+        return team != null ? new TeamDTO(team.First().team_id, team.First().created_by_profile_id, team.First().name) : null!;
+    }
+
+    public async Task<IEnumerable<TeamBaseModel>> GetAllMyTeams()
+    {
+        return await _teamData.GetAllMyTeams();
     }
 
     public async Task<bool> UpdateTeamName(int TeamID ,string Name)

@@ -36,9 +36,9 @@ public  class UserData:IUserData
         var Profiles = JsonSerializer.Deserialize<List<Profile>>(await _supabase.Rpc("sp_get_user_profile_by_email", new { p_email = Email }));
         if (Profiles.Count != 0)
             return new UserDTO(Profiles.First().profile_id,
-                               Guid.Empty,
-                               null,
-                               null,
+                               Profiles.First().user_id,
+                               Profiles.First().first_name,
+                               Profiles.First().last_name,
                                Profiles.First().email,
                                Profiles.First().is_active);
         return null!;

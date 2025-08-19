@@ -9,5 +9,6 @@ namespace TaskManagementBusinessLayer.Teams
         Task<IEnumerable<TeamBaseModel>> GetAllMyTeams();
         Task<bool> UpdateTeamName(int TeamID,string Name);
         Task<bool> DeleteTeam(int TeamID);
+        Task<TeamDTO> Find(int TeamID);
     }
 }

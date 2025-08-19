@@ -36,21 +36,24 @@ public class ProjectData : IProjectData
     {
         return JsonSerializer.Deserialize<IEnumerable<ProjectBaseModel>>(await _supabase.Rpc("sp_get_all_user_projects", new {}))!;
     }
-
-    public async Task<ProjectDTO> GetMyProjectInfoByID(Guid ProjectID)
+    public async Task<ProjectBaseModel> GetMyProjectInfoByID(Guid ProjectID)
     {
-        return JsonSerializer.Deserialize<ProjectDTO>(await _supabase.Rpc("sp_get_user_project_info_by_id", new {p_project_id=ProjectID}))!;
+        var project= JsonSerializer.Deserialize<IEnumerable<ProjectBaseModel>>(await _supabase.Rpc("sp_get_user_project_by_id", 
+            new {p_project_id=ProjectID}))!;
+        return project.FirstOrDefault()!;
     }
     public async Task<bool> UpdateProjectInfo(ProjectDTO updatedProject)
     {
-        return JsonSerializer.Deserialize<bool>(await _supabase.Rpc("sp_update_user_project",
+        return JsonSerializer.Deserialize<bool>(await _supabase.Rpc("sp_update_project",
           new
           {
               p_project_id = updatedProject.ProjectID,
+              p_owner_id=updatedProject.OwnerID,
               p_title = updatedProject.Title,
-              p_desc = updatedProject.Description,
+              p_description = updatedProject.Description,
               p_status_id = updatedProject.Status,
-              p_priority_id = updatedProject.Priority
+              p_priority_id = updatedProject.Priority,
+              p_created_at=updatedProject.CreatedAt
           }));
     }
 }

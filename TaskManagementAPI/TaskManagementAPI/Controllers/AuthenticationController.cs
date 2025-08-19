@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TaskManagementAPI.ApplicationDTOs.AuthControllerDTOs;
+using TaskManagementAPI.InputValidation;
 using TaskManagementAPI.Services;
 using TaskManagementBusinessLayer.Users;
-using TaskManagementDataAccessLayer.CustomSupabaseClient;
 using TaskManagementDataAccessLayer.Exceptions;
 using TaskManagementDataAccessLayer.UserData;
 
@@ -15,15 +15,17 @@ public class AuthenticationController : ControllerBase
 {
     private readonly IUser _user;
     private readonly ILogger<AuthenticationController> _logger;
+    private readonly IValidateInput _validateInput;
     private readonly IAuthService _supabaseAuth;
     private readonly Supabase.Client _client;
 
     public AuthenticationController(Supabase.Client client,IUser user,IAuthService supabaseAuth,
-        ILogger<AuthenticationController>logger)
+        ILogger<AuthenticationController>logger,IValidateInput validateInput)
     {
         this._user = user;
         this._supabaseAuth = supabaseAuth;
         this._logger = logger;
+        this._validateInput = validateInput;
         this._client = client;
     }
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -36,6 +38,9 @@ public class AuthenticationController : ControllerBase
     public async Task<IActionResult> SignUp([FromBody] SignUpDataDTO Request)
     {
         _logger.LogInformation("POST api/SignUp");
+        
+        if (!_validateInput.SignUpDataValidator(Request))
+            throw new BadRequestException("The Post Call To api/SignUp Failled due to Input validation Error!");
 
         var UserMetaData = new Dictionary<string, object>
             {
@@ -60,6 +65,9 @@ public class AuthenticationController : ControllerBase
     public async Task<IActionResult> SignIn([FromBody] SignInDataDTO Request)
     {
         _logger.LogInformation("POST api/SignIn");
+        if(!_validateInput.SignInDataValidator(Request))
+            throw new BadRequestException("The POST call api/SignIn failled due to Input Validation Error!");
+
         var Res = await _supabaseAuth.SignInAsync(Request.Email, Request.Password);
         if (Res == null)
             throw new BadRequestException("The POST call to api/SignIn failled!");
@@ -98,6 +106,9 @@ public class AuthenticationController : ControllerBase
     public async Task<IActionResult> RefreshToken([FromBody] string refreshToken)
     {
         _logger.LogInformation("POST api/RefreshToken");
+        if(string.IsNullOrEmpty(refreshToken))
+            throw new BadRequestException("the POST call to api/RefreshToken failled due to Input Validation Error!");
+
         string accessToken = "";
         var authHeader = HttpContext.Request.Headers["Authorization"].ToString();
         if (!string.IsNullOrWhiteSpace(authHeader) && authHeader.StartsWith("Bearer "))

@@ -1,5 +1,6 @@
 using TaskManagementAPI.Middlewares;
 using TaskManagementAPI.StartupConfig;
+using TaskManagementBusinessLayer.ScheduledJobs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +27,9 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 
+app.MapGet("/DailyReport", (Report report) => report.ReportData.Order());
+
 app.MapControllers();
+
 
 app.Run();

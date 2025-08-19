@@ -20,5 +20,15 @@
             this.Priority = Priority;
             this.CreatedAt = CreatedAt;
         }
+        public ProjectDTO(ProjectDTO project)
+        {
+            this.ProjectID = project.ProjectID;
+            this.OwnerID = project.OwnerID;
+            this.Title = project.Title;
+            this.Description = project.Description;
+            this.Status = project.Status;
+            this.Priority = project.Priority;
+            this.CreatedAt = project.CreatedAt;
+        }
     }
 }

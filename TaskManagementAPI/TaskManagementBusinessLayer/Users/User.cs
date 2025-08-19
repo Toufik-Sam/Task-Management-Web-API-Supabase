@@ -38,8 +38,8 @@ public class User : IUser
     {
         return await _userData.GetMyProfileInfo(Email);
     }
-    public async Task<UserDTO> UpdateUserProfileInfo(UserDTO user)
+    public async Task<bool> UpdateUserProfileInfo(UserDTO user)
     {
-        return await _userData.UpdateUserInfo(user) ? new UserDTO(user) : null!;
+        return await _userData.UpdateUserInfo(user);
     }
 }

@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using TaskManagementAPI.InputValidation;
 using TaskManagementBusinessLayer.Users;
+using TaskManagementDataAccessLayer.BaseModels;
 using TaskManagementDataAccessLayer.Exceptions;
 using TaskManagementDataAccessLayer.UserData;
 namespace TaskManagementAPI.Controllers;
@@ -10,13 +12,15 @@ public class UserController : ControllerBase
 {
     private readonly IUser _user;
     private readonly ILogger<UserController> _logger;
+    private readonly IValidateInput _validateInput;
     private readonly Supabase.Client _supabase;
 
-    public UserController(Supabase.Client supabse,IUser user,ILogger<UserController>logger)
+    public UserController(Supabase.Client supabse,IUser user,ILogger<UserController>logger,IValidateInput validateInput)
     {
         this._supabase = supabse;
         this._user = user;
         this._logger = logger;
+        this._validateInput = validateInput;
     }
 
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -58,13 +62,20 @@ public class UserController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [HttpPut("UpdateProfileInfo")]
-    public async Task<IActionResult> UpdateProfile([FromBody]UserDTO newUser)
+    public async Task<IActionResult> UpdateProfile(string Email,[FromBody]Profile profileBaseModel)
     {
         _logger.LogInformation("PUT api/UpdateProfileInfo");
-        
-        var updatedProfile = await _user.UpdateUserProfileInfo(newUser);
-        if (updatedProfile != null)
-            return Ok(updatedProfile);
+        if(!_validateInput.ProfileDataValidator(profileBaseModel))
+            throw new BadRequestException("the PUT call to api/UpdateProfileInfo failled due to Input Validation Error!");
+
+        var CurrentProfile = await _user.Find(Email);
+        if (CurrentProfile == null)
+            throw new NotFoundException($"Profile Was Not Found!");
+        CurrentProfile.FirstName = profileBaseModel.first_name;
+        CurrentProfile.LastName = profileBaseModel.last_name;
+        CurrentProfile.IsActive = profileBaseModel.is_active;
+        if (await _user.UpdateUserProfileInfo(CurrentProfile))
+            return Ok($"Profile with Email:{Email} Has Been Updated !");
         else
             throw new BadRequestException("the PUT call to api/UpdateProfileInfo failled!");
     }
@@ -78,6 +89,9 @@ public class UserController : ControllerBase
     public async Task<IActionResult> UpdatePassword([FromBody]string Email)
     {
         _logger.LogInformation("PUT api/UpdatePassword");
+        if(!_validateInput.EmailValidator(Email))
+            throw new BadRequestException("the PUT call to api/UpdatePassword failled due to Input Validation Error!");
+
         await _supabase.InitializeAsync();
         var responce=await _supabase.Auth.ResetPasswordForEmail(Email);
         if(responce)

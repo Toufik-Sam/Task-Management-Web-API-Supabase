@@ -8,5 +8,6 @@ namespace TaskManagementDataAccessLayer.TeamData
         Task<IEnumerable<TeamBaseModel>>GetAllMyTeams();
         Task<bool> UpdateTeamName(int TeamID,string Name);
         Task<bool> DeleteTeam(int TeamID);
+        Task<IEnumerable<TeamBaseModel>> GetTeamByID(int TeamID);
     }
 }

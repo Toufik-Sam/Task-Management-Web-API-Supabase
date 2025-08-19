@@ -15,6 +15,20 @@ using TaskManagementBusinessLayer.Projects;
 using TaskManagementDataAccessLayer.TeamData;
 using Microsoft.AspNetCore.WebSockets;
 using TaskManagementBusinessLayer.Teams;
+using TaskManagementBusinessLayer.Teams.TeamMembers;
+using TaskManagementBusinessLayer.Tasks;
+using TaskManagementDataAccessLayer.TeamData.TeamMemberData;
+using TaskManagementDataAccessLayer.InvitationData;
+using TaskManagementBusinessLayer.Invitations;
+using TaskManagementBusinessLayer.Projects.ProjectMembers;
+using TaskManagementDataAccessLayer.ProjectData.ProjectMemberData;
+using TaskManagementBusinessLayer.Goals;
+using TaskManagementDataAccessLayer.GoalData;
+using TaskManagementDataAccessLayer.TaskData;
+using TaskManagementDataAccessLayer.TaskData.TaskCategories;
+using TaskManagementBusinessLayer.Tasks.TaskCategory;
+using TaskManagementBusinessLayer.ScheduledJobs;
+using TaskManagementAPI.InputValidation;
 
 namespace TaskManagementAPI.StartupConfig;
 
@@ -83,6 +97,23 @@ public static class DependencyInjectionExtentions
         builder.Services.AddScoped<IProject, Project>();
         builder.Services.AddScoped<ITeamData, TeamData>();
         builder.Services.AddScoped<ITeam, Team>();
+        builder.Services.AddScoped<ITeamMember, TeamMember>();
+        builder.Services.AddScoped<ITeamMemberData, TeamMemberData>();
+        builder.Services.AddScoped<IInvitationData, InvitationData>();
+        builder.Services.AddScoped<IInvitation, Invitation>();
+        builder.Services.AddScoped<IProjectMemberData, ProjectMemberData>();
+        builder.Services.AddScoped<IProjectMember, ProjectMember>();
+        builder.Services.AddScoped<IGoalData, GoalData>();
+        builder.Services.AddScoped<IGoal, Goal>();
+        builder.Services.AddScoped<ITaskData, TaskData>();
+        builder.Services.AddScoped<ITask, xTask>();
+        builder.Services.AddScoped<ITaskCategoryData, TaskCategoryData>();
+        builder.Services.AddScoped<ITaskCategory, TaskCategory>();
+        builder.Services.AddSingleton<Report>();
+        builder.Services.AddHostedService<DailyReport>();
+        builder.Services.AddScoped<IValidateInput, ValidateInputService>();
+
+
     }
     public static void AddAuthServices(this WebApplicationBuilder builder)
     {
