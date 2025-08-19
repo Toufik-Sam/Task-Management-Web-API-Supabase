@@ -8,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.AddStandardServices();
 builder.AddAuthServices();
 builder.AddCustomServices();
-builder.AddValidationServices();
+//builder.AddValidationServices();
 //builder.Services.AddHttpClient();
 
 var app = builder.Build();

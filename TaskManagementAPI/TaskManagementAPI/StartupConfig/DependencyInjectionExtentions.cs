@@ -2,9 +2,6 @@
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using TaskManagementAPI.Services;
-using FluentValidation;
-using TaskManagementAPI.InputValidation.AuthControllerValidation;
-using FluentValidation.AspNetCore;
 using Microsoft.OpenApi.Models;
 using Supabase;
 using TaskManagementDataAccessLayer.UserData;
@@ -71,12 +68,12 @@ public static class DependencyInjectionExtentions
             opts.AddSecurityRequirement(securityRequiremet);
         });
     }
-    public static void AddValidationServices(this WebApplicationBuilder builder)
-    {
-        builder.Services.AddFluentValidationAutoValidation();
-        builder.Services.AddValidatorsFromAssemblyContaining<SignInDataValidator>();
-        builder.Services.AddValidatorsFromAssemblyContaining<SignUpDataValidator>();
-    }
+    //public static void AddValidationServices(this WebApplicationBuilder builder)
+    //{
+    //    builder.Services.AddFluentValidationAutoValidation();
+    //    builder.Services.AddValidatorsFromAssemblyContaining<SignInDataValidator>();
+    //    builder.Services.AddValidatorsFromAssemblyContaining<SignUpDataValidator>();
+    //}
     public static void AddCustomServices(this WebApplicationBuilder builder)
     {
         builder.Services.AddScoped<ISupabaseClient, SupabaseClient>();
