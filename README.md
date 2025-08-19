@@ -9,7 +9,7 @@ This project is a Task Management RESTful API designed and implemented using ASP
 - **Project Management**: manage projects and their members, with integrated status and priority tracking to ensure organized project progress.
 - **Goal Management**: Define and manage project goals with comprehensive status and priority tracking, including start and end date monitoring for effective timeline management.
 - **Task Management**: Oversee goal-related tasks, including subtasks, with comprehensive management of statuses, priorities, timelines, and task category assignments for organized workflow.
-- **Performance Management**:  Monitor goal performance by tracking tasks, completed and overdue tasks, total overdue time, and overall project progress for effective performance analysis.
+- **Performance Management**:  Monitor goal performance by tracking tasks, completed and overdue tasks, total overdue time, and overall project progress for effective performance analysis including daily Report simulation.
 - 
 ## Technical Features
 - **Clean Architecture**:  The project is structured according to the principles of Clean Architecture, which promotes separation of concerns and a clear division of responsibilities.
@@ -19,12 +19,13 @@ This project is a Task Management RESTful API designed and implemented using ASP
 - **CRUD Operations**: The project template provides a foundation for implementing complete CRUD (Create, Read, Update, Delete) operations on entities.
 - **Dependency Injection**: The project utilizes the built-in dependency injection container in ASP.NET Core, making it easy to manage and inject dependencies throughout the application.
 - **Data validation and error handling**: the projects Utilize a custom Middleware to handle Exceptions effectively (BadRequestException-NotFoundException-ForrbidenException ...ect).It also includes a custome service IValidateInpute to manage Input Validation.
-- **Supabase Integration**: Managed PostgreSQL Database with full SQL support for complex queries and robust data management including Supabase Functions development using PL/pgSQL .Authentication System supporting multiple methods such as email/password.implemented Row-Level Security policies for the different tables in the system 
+- **Supabase Integration**: Managed PostgreSQL Database with full SQL support for complex queries and robust data management including Supabase Functions development using PL/pgSQL .Authentication System supporting multiple methods such as email/password. Implemented Row-Level Security policies for the different tables in the system.
 
 ## Technologies Used
 - **ASP.NET Core 8 Web API** for API development.
 - **Supabase** for Database Development (PostgreSQL) and Authentication
 - C# 12 and PL/pgSQL
+  
 ## Endpoints
 The API endpoints are fully documented using **Swagger**. You can explore and interact with them through the Swagger UI once the application is running.
 
