@@ -19,7 +19,7 @@ This project is a Task Management RESTful API designed and implemented using ASP
 - **CRUD Operations**: The project template provides a foundation for implementing complete CRUD (Create, Read, Update, Delete) operations on entities.
 - **Dependency Injection**: The project utilizes the built-in dependency injection container in ASP.NET Core, making it easy to manage and inject dependencies throughout the application.
 - **Data validation and error handling**: the projects Utilize a custom Middleware to handle Exceptions effectively (BadRequestException-NotFoundException-ForrbidenException ...ect).It also includes a custome service IValidateInpute to manage Input Validation.
-- **Supabase Integration**: Managed PostgreSQL Database with full SQL support for complex queries and robust data management including Supabase Functions development and triggers implementation using PL/pgSQL .Authentication System supporting multiple methods such as email/password. Implemented Row-Level Security policies for the different tables in the system.
+- **Supabase Integration**: Managed PostgreSQL Database with full SQL support for complex queries and robust data management including Supabase Functions development and triggers implementation using PL/pgSQL. Implemented Row-Level Security policies for the different tables in the system.
 - **Data Structures and Algorithms**: Managed Tasks and Sub-Tasks by implmenting TaskGraph which is an AdjcenyList implemnted using a dictionary to keep track of tasks and parent tasks and handle Edge creation to link them and for space efficiency ,easy traversal and fast lookup.
  
 ## Technologies Used
