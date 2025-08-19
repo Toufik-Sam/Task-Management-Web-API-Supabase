@@ -29,4 +29,10 @@ This project is a Task Management RESTful API designed and implemented using ASP
 ## Endpoints
 The API endpoints are fully documented using **Swagger**. You can explore and interact with them through the Swagger UI once the application is running.
 
+![image alt](https://github.com/Toufik-Sam/Task-Management-Web-API-Supabase/blob/Master/images/swagger-image.PNG)
 
+## License
+[MIT License](LICENSE)
+
+## Contact
+[toufik.sam2022@gmail.com] - [www.linkedin.com/in/toufik-sam-bouafia-455773337]
