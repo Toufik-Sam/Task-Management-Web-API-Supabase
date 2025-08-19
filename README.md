@@ -32,10 +32,10 @@ This project is a Task Management RESTful API designed and implemented using ASP
 - A new user can sign up using their email and password and firstname and lastname.
 - Upon registration, they will receive a confirmation email from **Supabase** to verify their account.
 
-### 2. **Sign In**
+#### 2. **Sign In**
 - After email confirmation, the user can log in using their credentials(Emai and Password).
 
-### 3. **Create a Team**
+#### 3. **Create a Team**
 - After signing in, the user should create a **new team**.
 - Once the team is created, they can **invite other users** by email (users must already have a profile in the system).
 - Each invited user is assigned a role:
@@ -45,17 +45,17 @@ This project is a Task Management RESTful API designed and implemented using ASP
   - `enGuest`
 - Only team members with the role `enOwner` or `enTeamLead` are allowed to invite new members to the team.
 
-### 4. **Create a Project**
+#### 4. **Create a Project**
 - A user can create a **new project** under their team.
 - They may choose to:
   - Add themselves as a **project member**, or
   - Remain only as the **project owner**.
 - Similar to teams, only users with roles `enOwner` or `enTeamLead` within the project can invite other members.
 
-### 5. **Set Project Goals**
+#### 5. **Set Project Goals**
 - Once the project and its members are set up, users with roles `enOwner` or `enTeamLead` can begin creating **target goals** for the project.
 
-### 6. **Manage Tasks**
+#### 6. **Manage Tasks**
 - Any project member can create **tasks** and assign them either to themselves or to other project members.
     
 ## Endpoints
