@@ -29,7 +29,7 @@ This project is a Task Management RESTful API designed and implemented using ASP
 
 ## How It Works
 #### 1. **Sign Up**
-- A new user can sign up using their email and password and firstname and lastname.
+- A new user can sign up using their email and password and firstname and lastname and phone number.
 - Upon registration, they will receive a confirmation email from **Supabase** to verify their account.
 
 #### 2. **Sign In**
