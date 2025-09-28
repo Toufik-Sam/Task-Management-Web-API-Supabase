@@ -12,7 +12,7 @@ This project is a Task Management RESTful API designed and implemented using ASP
 - **Performance Management**:  Monitor goal performance by tracking tasks, completed and overdue tasks, total overdue time, Completion rate, and overall project progress for effective performance analysis including daily Report simulation.
   
 ## Technical Features
-- **Clean Architecture**:  The project is structured according to the principles of Clean Architecture, which promotes separation of concerns and a clear division of responsibilities.
+- **3-tier Architecture**:  The project is structured according to the 3-tier Architecture, which promotes separation of concerns and a clear division of responsibilities.
 - **SOLID Design Principles**:The code adheres to SOLID principles (Single Responsibility, Open-Closed, Liskov Substitution, Interface Segregation, and Dependency Inversion), making it easier to maintain and extend.
 - **ASP.NET Core API**: The project includes an ASP.NET Core API project that serves as the API layer, handling HTTP requests and responses.
 - **JWT for Token-based Authentication**: Effortlessly manage user sessions, authentication, and authorization with this state-of-the-art token-based approach.
